@@ -1,112 +1,113 @@
 @import url("../styles/global-styles.css");
 
-/* Extra small devices (phones, 600px and down) */
-@media only screen and (max-width: 600px) {
-    .main-container {
-        padding: 1em; /* Adjust padding for smaller screens */
-    }
-
-    .main-container > input {
-        width: 90%; /* Adjust input width for smaller screens */
-    }
-
-    .hideField, .showField {
-        display: block; /* Ensure fields are visible on smaller screens */
-    }
-
-    .top-left-icon, .darkmode-toggle-container, .login-link, .next-button {
-        margin: 0.5em; /* Adjust margins for smaller screens */
-    }
+body {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    min-height: 100vh; /* Ensures the body takes at least the full viewport height */
+    margin: 0; /* Resets any default margin */
 }
 
-/* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 600px) {
-    /* Add styles specific to small devices here */
+/* Base styles for smaller devices */
+.main-container {
+    display: grid;
+    grid-template-columns: minmax(auto, 1fr) 2fr 2fr minmax(auto, 1fr);
+    grid-template-rows: auto 1fr auto; /* Top, middle, bottom rows */
+    gap: 1em;
+    padding: 1em;
+    box-sizing: border-box;
 }
 
-/* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (min-width: 768px) {
-    /* Add styles specific to medium devices here */
+.top-left-icon {
+    grid-column: 1 / 2;
+    grid-row: 1;
+    width: 2.5em; /* Makes the icon's width 10% of its container's width */
+    height: auto; /* Maintains the aspect ratio of the image */
 }
 
-/* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 992px) {
-    
+.darkmode-toggle-container {
+    grid-column: 4 / 5;
+    grid-row: 1;
+    justify-self: end;
 }
 
-/* Extra large devices (large laptops and desktops, 1200px and up) */
-@media only screen and (min-width: 1200px) {
-    
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        text-align: center;
-    }
-    
-    .main-container {
-        display: flex;
-        position: relative;
-        flex-direction: column;
-        align-items: center;
-        padding: 1vh 2vw;
-    }
-    
-    .top-left-icon {
-        top: 0;
-        left: 0;
-    }
-    
-    .top-left-icon {
-        position: relative; /* Ensure proper positioning of child elements */
-        width: 1.5em; /* Adjust width as needed */
-    }
-    
-    .darkmode-toggle-container {
-        top: 0;
-        right: -0.5em;
-    }
-    
-    .login-link {
-        bottom: 0;
-        left: 0;
-    }
-    
-    .login-link p {
-        margin: 0;
-    }
-    
-    .next-button {
-        bottom: 0;
-        right: 0;
-    }
-    
-    .top-left-icon, .darkmode-toggle-container, .login-link, .next-button {
+.login-link {
+    grid-column: 1 / span 2; /* Spans below the main-content */
+    grid-row: 3; /* Automatically places it in the next available row */
+    height: 1.5rem;
+}
+
+.login-link p {
+    margin: 0;
+}
+
+.next-button {
+    grid-column: 4 / 5;
+    grid-row: 3;
+    justify-self: end;
+    width: 100%;
+}
+
+.main-content {
+    grid-column: 2 / span 2;
+    grid-row: 1 / span 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    text-align: center;
+}
+
+input {
+    width: 95%;
+}
+
+.symbol {
+    padding-right: 5px; /* Adjust spacing */
+}
+
+.valid {
+    color: green; /* Style for valid condition */
+}
+
+.invalid {
+    color: red; /* Style for invalid condition */
+}
+
+.hideField {
+    display: none;
+}
+
+.relative-container {
+    position: relative; /* Creates a positioning context for absolutely positioned children */
+    margin: -0.5rem 0;
+    padding: 0;
+}
+
+ul {
+    list-style-type: none; /* Removes the bullet points */
+    padding-left: 0; /* Removes the default padding */
+    margin-left: 0; /* Ensures there's no margin on the left */
+}
+
+@media only screen and (min-width: 601px) {
+    #password-requirements {
         position: absolute;
-        margin: 1em;
-    }
-    
-    .main-container > h1 {
-        margin-top: 1em;
-    }
-    
-    .hideField {
-        display: none;
-    }
-    
-    .showField {
-        display: block;
-    }
-    
-    input {
-        margin-bottom: 1em;
-        width: 75%;
-        height: 2em;
+        bottom: -5rem;
+        left: 16.5rem;
+        width: 15rem;
+        z-index: 2;
+        background-color: var(--container-color-light);
+        border-radius: 15px;
+        transition: background-color 0.1s ease;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
     }
 
-    .error-message {
-        margin-bottom: 3em;
+    .dark-mode #password-requirements {
+        background-color: var(--container-color-dark);
+        transition: background-color 0.1s ease;
     }
     
+
 }

@@ -1,6 +1,8 @@
 <!--#include file="db-config.asp"-->
 <!--#include file="Crypto.Class.asp"-->
 <!--#include file="InputPolicy.Class.asp"-->
+<!--#include file="CookieManager.Class.asp"-->
+
 <%
 'ADO constants
 Const adVarChar = 200
@@ -49,18 +51,12 @@ Class userManager
             ' Initialize our Crypto object and use its method to verify the user submitted password against the hash from the recordset
             Dim crypt: Set crypt = New Crypto
             If crypt.verifyPassword(Pass, rs("PasswordHash")) Then
-                Session("LoggedInUser") = User
-                
-                ' Set up authentication token
-                Dim authToken: authToken = GenerateAuthToken(32)
-
-                ' Store the authentication token in the session
-                Session("AuthToken") = authToken
-                Response.Cookies("AuthToken").HttpOnly = True
-                Response.Cookies("AuthToken").Secure = True
-                Response.Cookies("AuthToken").SameSite = "Strict"
-
-                HandleError "Error setting auth cookies"
+                Dim cookieManager: Set cookieManager = New CookieManager
+                Dim authToken: authToken = cookieManager.GenerateAuthString(32) ' Assuming you have a method for generating the auth token
+                cookieManager.SetSecureCookie "AuthToken", authToken, 30 ' Set auth token for 30 days
+                cookieManager.SetSecureCookie "LoggedInUser", User, 30 ' Set logged in username for 30 days
+                Set cookieManager = nothing
+                HandleError "Error initializing authorization cookies"
 
                 set rs = nothing
                 set crypt = nothing
@@ -71,29 +67,12 @@ Class userManager
             End If
         Else
             ' Make sure a user was found
-            Response.Write "User not found" & "<br>"
+            Response.Write "User not found"
         End If
         ' Cleaning
         set rs = nothing
         set crypt = nothing
         On Error GoTo 0
-    End Function
-
-    private function GenerateAuthToken(length)
-        Randomize Timer ' Initialize random number generator with current time
-
-        Dim chars
-        chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-
-        Dim randomString
-        randomString = ""
-
-        Dim i
-        For i = 1 To length
-            randomString = randomString & Mid(chars, Int(Rnd() * Len(chars)) + 1, 1)
-        Next
-        
-        GenerateAuthToken = randomString
     End Function
 
     public Function UsernameExists(User)

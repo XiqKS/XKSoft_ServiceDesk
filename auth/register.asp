@@ -1,10 +1,9 @@
 <%@ Language=VBScript %>
 <!--#include file="CookieManager.Class.asp"-->
 <%
-If IsEmpty(Session("CSRFToken")) Then
     dim cookieSetter: set cookieSetter = new CookieManager
     cookieSetter.GenerateCSRFToken
-End If
+    set cookieSetter = nothing
 %>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -20,16 +19,30 @@ End If
     <div class="main-container container">
         <!--#include virtual="/dark-mode/dark-mode.asp" -->
         <img src="../icons/helldivers2.svg" class="top-left-icon" alt="Helldivers2 Icon">
-
-        <h1>XKSoft Solutions</h1>
-        <input type="text" class="buttonEvents" id="username-field" name="username" placeholder="Username" required tabindex="1">
-        <input type="password" class="buttonEvents hideField" id="password-field" name="password" required tabindex="2">
-        <input type="password" class="buttonEvents hideField" id="passwordConfirm-field" name="passwordConfirm" required tabindex="3">
-        <div class="error-message" id="errorMessageRegister"></div>
-
-        <button type="button" class="next-button" onclick="chooseProcess()" tabindex="4">Next</button>
+        <div class="main-content">
+            <h1>XKSoft ServiceDesk</h1>
+            <input type="text" class="buttonEvents" id="username-field" name="username" placeholder="Username" required tabindex="1">
+            <input type="password" class="buttonEvents hideField" id="password-field" name="password" placeholder="Password" required tabindex="2">
+            <div class="relative-container">
+                <div id="password-requirements" class="hideField">
+                    <p>Password must contain:</p>
+                    <ul>
+                        <li id="req-length" class="invalid"><span class="symbol">✗</span> At least 8 characters</li>
+                        <li id="req-number" class="invalid"><span class="symbol">✗</span> At least one number</li>
+                        <li id="req-uppercase" class="invalid"><span class="symbol">✗</span> At least one uppercase letter</li>
+                        <li id="req-lowercase" class="invalid"><span class="symbol">✗</span> At least one lowercase letter</li>
+                        <li id="req-special" class="invalid"><span class="symbol">✗</span> At least one special character</li>
+                        <br>
+                        <li id="req-match" class="invalid"><span class="symbol">✗</span> Passwords match</li>
+                    </ul>
+                </div>
+            </div>
+            <input type="password" class="buttonEvents hideField" id="passwordConfirm-field" name="passwordConfirm" placeholder="Confirm Password" required tabindex="3">
+            <div class="error-message" id="errorMessageRegister"></div>
+        </div>
+        <button type="button" class="next-button" onclick="chooseProcess()" tabindex="5">Next</button>
         <div class="login-link">    
-            <p>Already registered? <a href="login.asp" tabindex="5">Login</a> now!</p>
+            <p>Already registered? <a href="login.asp" tabindex="4">Login</a> now!</p>
         </div>
     </div>
     
@@ -45,7 +58,96 @@ End If
                     event.preventDefault();
                 }
             });
+            if (input.name === 'password' || input.name === 'passwordConfirm') {
+                input.addEventListener('keyup', updateRequirementStatus);
+                
+                const requirementsContainer = document.getElementById('password-requirements');
+                input.addEventListener('focus', () => {
+                    requirementsContainer.classList.remove('hideField'); // Show
+                });
+                input.addEventListener('blur', () => {
+                    requirementsContainer.classList.add('hideField'); // Hide when not focused
+                });
+            }
         });
+
+        function updateRequirementStatus() {
+            const password = document.getElementById('password-field').value;
+            const passwordConfirm = document.getElementById('passwordConfirm-field').value;
+
+            const lengthRequirement = document.getElementById('req-length');
+            const lengthSymbol = lengthRequirement.querySelector('.symbol');
+            if (checkPasswordLength(password)) {
+                lengthSymbol.textContent = '\u2713'; // Checkmark
+                lengthRequirement.classList.add('valid');
+                lengthRequirement.classList.remove('invalid');
+            } else {
+                lengthSymbol.textContent = '\u2717'; // Cross
+                lengthRequirement.classList.add('invalid');
+                lengthRequirement.classList.remove('valid');
+            }
+
+            const upperCaseRequirement = document.getElementById('req-uppercase');
+            const upperCaseSymbol = upperCaseRequirement.querySelector('.symbol');
+            if (checkPasswordUpperCase(password)) {
+                upperCaseSymbol.textContent = '\u2713'; // Checkmark
+                upperCaseRequirement.classList.add('valid');
+                upperCaseRequirement.classList.remove('invalid');
+            } else {
+                upperCaseSymbol.textContent = '\u2717'; // Cross
+                upperCaseRequirement.classList.add('invalid');
+                upperCaseRequirement.classList.remove('valid');
+            }
+
+            const lowerCaseRequirement = document.getElementById('req-lowercase');
+            const lowerCaseSymbol = lowerCaseRequirement.querySelector('.symbol');
+            if (checkPasswordLowerCase(password)) {
+                lowerCaseSymbol.textContent = '\u2713'; // Checkmark
+                lowerCaseRequirement.classList.add('valid');
+                lowerCaseRequirement.classList.remove('invalid');
+            } else {
+                lowerCaseSymbol.textContent = '\u2717'; // Cross
+                lowerCaseRequirement.classList.add('invalid');
+                lowerCaseRequirement.classList.remove('valid');
+            }
+
+
+            const digitRequirement = document.getElementById('req-number');
+            const digitSymbol = digitRequirement.querySelector('.symbol');
+            if (checkPasswordDigit(password)) {
+                digitSymbol.textContent = '\u2713'; // Checkmark
+                digitRequirement.classList.add('valid');
+                digitRequirement.classList.remove('invalid');
+            } else {
+                digitSymbol.textContent = '\u2717'; // Cross
+                digitRequirement.classList.add('invalid');
+                digitRequirement.classList.remove('valid');
+            }
+            
+            const symbolRequirement = document.getElementById('req-special');
+            const symbol = symbolRequirement.querySelector('.symbol');
+            if (checkPasswordSymbol(password)) {
+                symbol.textContent = '\u2713'; // Checkmark
+                symbolRequirement.classList.add('valid');
+                symbolRequirement.classList.remove('invalid');
+            } else {
+                symbol.textContent = '\u2717'; // Cross
+                symbolRequirement.classList.add('invalid');
+                symbolRequirement.classList.remove('valid');
+            }
+
+            const matchRequirement = document.getElementById('req-match');
+            const matchSymbol = matchRequirement.querySelector('.symbol');
+            if (passwordConfirm === password && password !== '') {
+                matchSymbol.textContent = '\u2713'; // Checkmark
+                matchRequirement.classList.add('valid');
+                matchRequirement.classList.remove('invalid');
+            } else {
+                matchSymbol.textContent = '\u2717'; // Cross
+                matchRequirement.classList.add('invalid');
+                matchRequirement.classList.remove('valid');
+            }
+        }
 
         function chooseProcess() {
             const username = document.getElementById('username-field').value.trim();
@@ -54,10 +156,11 @@ End If
             
             if (validUsername(username)) 
                 checkUsernameAvailability(username);
-    
-            if (document.getElementById('password-field').classList.contains('showField')) 
+            
+            if (!document.getElementById('password-field').classList.contains('hideField')) {
                 if (validPassword(password,passwordConfirm)) 
                     registerUser(username,password);
+                }
         }
 
         function validUsername(username) {
@@ -89,21 +192,19 @@ End If
         }
 
         function showPasswordFields() {
-            const usernameField = document.getElementById('username-field');
             const passwordField = document.getElementById('password-field');
             const passwordConfirmField = document.getElementById('passwordConfirm-field');
 
-            passwordField.classList.add('showField');
-            passwordConfirmField.classList.add('showField');
+            passwordField.classList.remove('hideField');
+            passwordConfirmField.classList.remove('hideField');
         }
 
         function hidePasswordFields() {
-            const usernameField = document.getElementById('username-field');
             const passwordField = document.getElementById('password-field');
             const passwordConfirmField = document.getElementById('passwordConfirm-field');
 
-            passwordField.classList.remove('showField');
-            passwordConfirmField.classList.remove('showField');
+            passwordField.classList.add('hideField');
+            passwordConfirmField.classList.add('hideField');
         }
 
         function changeErrorMessage(text) {
@@ -138,7 +239,6 @@ End If
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
-                        alert(xhr.responseText);
                         const response = JSON.parse(xhr.responseText);
                         if (response.success) {
                             window.location.href = "login.asp?registered=true";

@@ -26,9 +26,8 @@ body {
 button {
     background-color: var(--button-backgroundcolor-light);
     color: var(--button-color-light);
-    padding: 0.5em 1.5em;
     border: none;
-    border-radius: 10px;
+    border-radius: 15px;
     cursor: pointer;
 }
 
