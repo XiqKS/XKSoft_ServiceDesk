@@ -1,5 +1,9 @@
 @import url("../styles/global-styles.css");
 
+html {
+    font-size: 150%;
+}
+
 body {
     display: flex;
     justify-content: center; /* Centers horizontally */
@@ -10,6 +14,7 @@ body {
 
 /* Base styles for smaller devices */
 .main-container {
+    position: relative;
     display: grid;
     grid-template-columns: minmax(auto, 1fr) 2fr 2fr minmax(auto, 1fr);
     grid-template-rows: auto 1fr auto; /* Top, middle, bottom rows */
@@ -54,12 +59,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1em;
+    gap: 1rem;
     text-align: center;
-}
-
-input {
-    width: 95%;
 }
 
 .symbol {
@@ -84,21 +85,34 @@ input {
     padding: 0;
 }
 
+h1, h2 {
+    margin: 0;
+}
+h2 {
+    margin-top: -1rem;
+}
+
 ul {
     list-style-type: none; /* Removes the bullet points */
     padding-left: 0; /* Removes the default padding */
     margin-left: 0; /* Ensures there's no margin on the left */
 }
 
-@media only screen and (min-width: 601px) {
+input {
+    width: 22rem;
+    height: 1.25rem;
+}
+
+
+@media only screen and (min-width: 110rem) {
     #password-requirements {
         position: absolute;
-        bottom: -5rem;
-        left: 16.5rem;
+        top: -9.5rem;
+        left: 18.5rem;
         width: 15rem;
         z-index: 2;
         background-color: var(--container-color-light);
-        border-radius: 15px;
+        border-radius: 1rem;
         transition: background-color 0.1s ease;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         padding: 1rem;
@@ -110,4 +124,10 @@ ul {
     }
     
 
+}
+
+@media only screen and (max-width: 40rem) {
+    html {
+        font-size: 100%;
+    }
 }

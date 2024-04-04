@@ -1,8 +1,8 @@
 <%@ Language=VBScript %>
 <!--#include file="CookieManager.Class.asp"-->
 <%
-    dim cookieSetter: set cookieSetter = new CookieManager
-    cookieSetter.GenerateCSRFToken
+    dim csrfToken, cookieSetter: set cookieSetter = new CookieManager
+    csrfToken = cookieSetter.GenerateCSRFToken
     set cookieSetter = nothing
 %>
 <!DOCTYPE html>
@@ -14,6 +14,7 @@
 
     <script src="../scripts/inputPolicy.js"></script>
     <link rel="stylesheet" href="../styles/login-styles.css">
+    <meta name="csrf-token" content="<%=csrfToken%>">
 </head>
 <body>
     <div class="main-container container">
@@ -21,6 +22,7 @@
         <img src="../icons/helldivers2.svg" class="top-left-icon" alt="Helldivers2 Icon">
         <div class="main-content">
             <h1>XKSoft ServiceDesk</h1>
+            <h2>Register</h2>
             <input type="text" class="buttonEvents" id="username-field" name="username" placeholder="Username" required tabindex="1">
             <input type="password" class="buttonEvents hideField" id="password-field" name="password" placeholder="Password" required tabindex="2">
             <div class="relative-container">
@@ -45,6 +47,8 @@
             <p>Already registered? <a href="login.asp" tabindex="4">Login</a> now!</p>
         </div>
     </div>
+    <div id="loadingBar" class="hideField">Loading...</div>
+
     
     <script>
         // Event handler for keypress on input fields
@@ -169,7 +173,7 @@
                 changeErrorMessage('Please enter a username.');
             } else if (!checkUsername(username)) {
                 hidePasswordFields();
-                changeErrorMessage('Invalid character in username.');
+                changeErrorMessage('Username is not valid');
             } else {
                 changeErrorMessage('');
                 return true;

@@ -11,7 +11,7 @@ Class CookieManager
         Response.AddHeader "Set-Cookie", cookieValue
     End Sub
 
-    Public Sub GenerateCSRFToken()
+    Public Function GenerateCSRFToken()
         ' Check if a CSRF token already exists in the session; generate one if it doesn't
         If IsEmpty(Session("CSRFToken")) Then
             Dim temp: temp = GenerateAuthString(32)
@@ -21,7 +21,8 @@ Class CookieManager
             ' If a CSRF token already exists, just update the cookie with the existing token
             SetSecureCookie "CSRFToken", Session("CSRFToken"), 1
         End If
-    End Sub
+        GenerateCSRFToken = Session("CSRFToken")
+    End Function
 
     function GenerateAuthString(length)
         Randomize Timer ' Initialize random number generator with current time

@@ -19,7 +19,7 @@ body {
 .container {
     background-color: var(--container-color-light);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 15px;
+    border-radius: 1rem;
     transition: background-color 0.1s ease;
 }
 
@@ -27,16 +27,18 @@ button {
     background-color: var(--button-backgroundcolor-light);
     color: var(--button-color-light);
     border: none;
-    border-radius: 15px;
+    border-radius: 1rem;
     cursor: pointer;
+    font-size: 0.7rem;
 }
 
 input {
     background-color: var(--background-color-light);
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 1rem;
     box-sizing: border-box;
     text-align: center;
+    font-size: 0.7rem;
 }
 
 .error-message {
