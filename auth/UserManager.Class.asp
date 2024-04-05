@@ -19,14 +19,6 @@ Class userManager
         conn.Open connStr
 
         Session.Timeout = 20
-    
-        ' Add security headers
-        Response.AddHeader "Content-Security-Policy", "default-src 'self'; script-src 'self' ../scripts; style-src 'self' ../styles;"
-        Response.AddHeader "X-Content-Type-Options", "nosniff"
-        Response.AddHeader "X-Frame-Options", "DENY"
-        Response.AddHeader "X-XSS-Protection", "1; mode=block"
-        Response.AddHeader "Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload"
-        Response.AddHeader "Referrer-Policy", "strict-origin-when-cross-origin"
     End Sub
     
     public Function AuthenticateUser(User, Pass)
