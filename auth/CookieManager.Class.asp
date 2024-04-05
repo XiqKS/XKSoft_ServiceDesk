@@ -24,6 +24,15 @@ Class CookieManager
         GenerateCSRFToken = Session("CSRFToken")
     End Function
 
+    ' New method to forcibly generate a new CSRF token
+    Public Function RegenerateCSRFToken()
+        Dim newToken
+        newToken = GenerateAuthString(32) ' Call your method to generate a random string
+        Session("CSRFToken") = newToken ' Override any existing CSRF token in the session
+        SetSecureCookie "CSRFToken", newToken, 1 ' Set the new CSRF token as a secure cookie
+        RegenerateCSRFToken = newToken ' Return the new token
+    End Function
+
     function GenerateAuthString(length)
         Randomize Timer ' Initialize random number generator with current time
 

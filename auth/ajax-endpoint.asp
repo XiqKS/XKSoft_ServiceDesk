@@ -7,6 +7,16 @@ Response.AddHeader "X-XSS-Protection", "1; mode=block"
 Response.AddHeader "Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload"
 Response.AddHeader "Referrer-Policy", "strict-origin-when-cross-origin"
 
+Dim submittedToken, sessionToken
+submittedToken = Request.Form("csrfToken") ' Get CSRF token from post
+sessionToken = Session("CSRFToken") ' CSRF token from session
+
+' Check if the tokens match
+If submittedToken = "" OR submittedToken <> sessionToken Then
+    Response.Write "{""success"": false, ""error"": ""CSRF token mismatch or missing.""}"
+    Response.End
+End If
+
 ' Retrieve POST parameters
 Dim username: username = Request.Form("username")
 Dim password: password = Request.Form("password")

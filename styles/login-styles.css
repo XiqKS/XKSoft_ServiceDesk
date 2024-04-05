@@ -21,6 +21,7 @@ body {
     gap: 1em;
     padding: 1em;
     box-sizing: border-box;
+    overflow: visible;
 }
 
 .top-left-icon {
@@ -103,6 +104,44 @@ input {
     height: 1.25rem;
 }
 
+/* Wrapper specifically for the loading bar to restrict its overflow */
+.loading-bar-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Fill the container */
+    height: 100%; /* Fill the container */
+    border-radius: inherit; /* Match the container's border-radius */
+    overflow: hidden; /* Hide overflow, respecting the border-radius */
+    pointer-events: none; /* Make the wrapper not interfere with user interaction */
+}
+
+#loadingBar {
+    position: absolute;
+    bottom: 0; /* Position at the bottom of the wrapper */
+    left: 0;
+    width: 100%; /* Adjust based on loading progress */
+    height: 0.2rem; /* Height of the loading bar */
+    background-color: #007bff; /* Adjust the color as needed */
+    /* No need for border-radius unless it's partially filled and visible */
+}
+
+/* Optional: Add a rainbow effect to your loading bar */
+@keyframes rainbow {
+    0% { background-color: red; }
+    17% { background-color: orange; }
+    34% { background-color: yellow; }
+    51% { background-color: green; }
+    68% { background-color: blue; }
+    85% { background-color: indigo; }
+    100% { background-color: violet; }
+}
+
+#loadingBar {
+    animation: rainbow 2s linear infinite;
+}
+
+
 
 @media only screen and (min-width: 110rem) {
     #password-requirements {
@@ -116,6 +155,7 @@ input {
         transition: background-color 0.1s ease;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         padding: 1rem;
+        z-index: 10; /* Ensure it's above other content */
     }
 
     .dark-mode #password-requirements {

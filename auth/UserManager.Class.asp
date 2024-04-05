@@ -83,7 +83,6 @@ Class userManager
             Response.Write "Invalid username"
             Exit Function
         End If
-
         Dim cmdText: cmdText = "SELECT COUNT(1) FROM Users WHERE Username = ?;"
         Dim params(0): params(0) = Array("Username", User) 
         dim rs: Set rs = ExecuteQuery(cmdText, params)

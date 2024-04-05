@@ -2,7 +2,7 @@
 <!--#include file="CookieManager.Class.asp"-->
 <%
     dim cookieSetter: set cookieSetter = new CookieManager
-    cookieSetter.GenerateCSRFToken
+    csrfToken = cookieSetter.GenerateCSRFToken
     set cookieSetter = nothing
 %>
 <!DOCTYPE html>
@@ -10,11 +10,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Login</title>
     
     <script src="../scripts/inputPolicy.js"></script>
     <link rel="stylesheet" href="../styles/login-styles.css">
-    <meta name="csrf-token" content="{{CSRF_TOKEN}}">
+    <meta name="csrf-token" content="<%=csrfToken%>">
 </head>
 <body>
     <div class="main-container container">
@@ -30,6 +30,9 @@
         <button type="button" class="next-button" onclick="chooseProcess()" tabindex="5">Next</button>
         <div class="login-link">    
             <p>Don't have an account? <a href="register.asp" tabindex="4">Register</a> now!</p>
+        </div>
+        <div class="loading-bar-wrapper">
+            <div id="loadingBar" class="hideField"></div>
         </div>
     </div>
     
@@ -50,7 +53,6 @@
         function chooseProcess() {
             const username = document.getElementById('username-field').value.trim();
             const password = document.getElementById('password-field').value.trim();
-            
             if (validUsername(username)) 
                 checkUsernameAvailability(username);
             
@@ -61,10 +63,10 @@
 
         function validUsername(username) {
             if (username === '') {
-                hidePasswordFields();
+                togglePasswordFields(false);
                 changeErrorMessage('Please enter a username');
             } else if (!checkUsername(username)) {
-                hidePasswordFields();
+                togglePasswordFields(false);
                 changeErrorMessage('Username is not valid');
             } else {
                 changeErrorMessage('');
@@ -85,62 +87,85 @@
             return false;
         }
 
-        function showPasswordFields() {
+        function togglePasswordFields(show) {
             const passwordField = document.getElementById('password-field');
-            passwordField.classList.remove('hideField');
-        }
-
-        function hidePasswordFields() {
-            const passwordField = document.getElementById('password-field');
-            passwordField.classList.add('hideField');
+            show ? passwordField.classList.remove('hideField') : passwordField.classList.add('hideField');
         }
 
         function changeErrorMessage(text) {
             document.getElementById('errorMessageLogin').innerText = text;
         }
 
-        function checkUsernameAvailability(username) {
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'ajax-endpoint.asp', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        const response = JSON.parse(xhr.responseText);
-                        if (response.success) {
-                            showPasswordFields();
-                        } else {
-                            changeErrorMessage('Username not found'); // Display error message
-                        }
-                    } else {
-                        changeErrorMessage('Error communicating with server'); // Display error message
-                    }
-                }
-            };
-            xhr.send('operation=usernameExists&username=' + encodeURIComponent(username));
+        // Define a function to handle showing and hiding the loading bar
+        function toggleLoadingBar(show) {
+            const loadingBar = document.getElementById('loadingBar');
+            if (show) {
+                loadingBar.classList.remove('hideField');
+            } else {
+                loadingBar.classList.add('hideField');
+            }
         }
 
-        function authenticateUser(username,password) {
+        async function checkUsernameAvailability(username) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            toggleLoadingBar(true); // Show loading bar 
 
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'ajax-endpoint.asp', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        const response = JSON.parse(xhr.responseText);
-                        if (response.success) {
-                            window.location.href = "../dashboard/dashboard.asp";
-                        } else {
-                            changeErrorMessage('Error logging in user.');
-                        }
-                    } else {
-                        changeErrorMessage('Error communicating with server');
-                    }
-                }   
+            try {
+                const response = await fetch('ajax-endpoint.asp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `operation=usernameExists&username=${encodeURIComponent(username)}&csrfToken=${encodeURIComponent(csrfToken)}`
+                });
+                const data = await response.json();
+                await delay(500);
+                toggleLoadingBar(false); // Hide loading bar after request
+
+                if (data.success) {
+                    togglePasswordFields(true);
+                } else {
+                    changeErrorMessage('Username not available.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                toggleLoadingBar(false); // Hide loading bar on error
+                changeErrorMessage('Error communicating with server.');
             }
-            xhr.send('operation=authenticate&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password));                
+        }
+
+        async function authenticateUser(username, password) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            toggleLoadingBar(true); // Show loading bar
+
+            try {
+                const response = await fetch('ajax-endpoint.asp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `operation=authenticate&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&csrfToken=${encodeURIComponent(csrfToken)}`
+                });
+                const data = await response.json();
+                await delay(500);
+                toggleLoadingBar(false); // Hide loading bar after request
+
+                if (data.success) {
+                    window.location.href = "../dashboard/dashboard.asp"; // Adjust the redirect URL as needed
+                } else {
+                    changeErrorMessage('Error logging in user.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                toggleLoadingBar(false); // Hide loading bar on error
+                changeErrorMessage('Error communicating with server.');
+            }
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         }
     </script>   
+
 </body>
 </html>

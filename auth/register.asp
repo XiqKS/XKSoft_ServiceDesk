@@ -17,6 +17,7 @@
     <meta name="csrf-token" content="<%=csrfToken%>">
 </head>
 <body>
+
     <div class="main-container container">
         <!--#include virtual="/dark-mode/dark-mode.asp" -->
         <img src="../icons/helldivers2.svg" class="top-left-icon" alt="Helldivers2 Icon">
@@ -46,9 +47,10 @@
         <div class="login-link">    
             <p>Already registered? <a href="login.asp" tabindex="4">Login</a> now!</p>
         </div>
+        <div class="loading-bar-wrapper">
+            <div id="loadingBar" class="hideField"></div>
+        </div>
     </div>
-    <div id="loadingBar" class="hideField">Loading...</div>
-
     
     <script>
         // Event handler for keypress on input fields
@@ -169,10 +171,10 @@
 
         function validUsername(username) {
             if (username === '') {
-                hidePasswordFields();
+                togglePasswordFields(false);
                 changeErrorMessage('Please enter a username.');
             } else if (!checkUsername(username)) {
-                hidePasswordFields();
+                togglePasswordFields(false);
                 changeErrorMessage('Username is not valid');
             } else {
                 changeErrorMessage('');
@@ -195,67 +197,89 @@
             return false;
         }
 
-        function showPasswordFields() {
+        function togglePasswordFields(show) {
             const passwordField = document.getElementById('password-field');
             const passwordConfirmField = document.getElementById('passwordConfirm-field');
-
-            passwordField.classList.remove('hideField');
-            passwordConfirmField.classList.remove('hideField');
-        }
-
-        function hidePasswordFields() {
-            const passwordField = document.getElementById('password-field');
-            const passwordConfirmField = document.getElementById('passwordConfirm-field');
-
-            passwordField.classList.add('hideField');
-            passwordConfirmField.classList.add('hideField');
+            if (show) {
+                passwordField.classList.remove('hideField');
+                passwordConfirmField.classList.remove('hideField');
+            } else {
+                passwordField.classList.add('hideField');
+                passwordConfirmField.classList.add('hideField');
+            }
         }
 
         function changeErrorMessage(text) {
             document.getElementById('errorMessageRegister').innerText = text;
         }
 
-        function checkUsernameAvailability(username) {
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'ajax-endpoint.asp', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        const response = JSON.parse(xhr.responseText);
-                        if (!response.success) {
-                            showPasswordFields();
-                        } else {
-                            changeErrorMessage('Username not available'); // Display error message
-                        }
-                    } else {
-                        changeErrorMessage('Error communicating with server'); // Display error message
-                    }
-                }
-            };
-            xhr.send('operation=usernameExists&username=' + encodeURIComponent(username));
+        // Define a function to handle showing and hiding the loading bar
+        function toggleLoadingBar(show) {
+            const loadingBar = document.getElementById('loadingBar');
+            show ? loadingBar.classList.remove('hideField') : loadingBar.classList.add('hideField');
         }
 
-        function registerUser(username,password) {
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'ajax-endpoint.asp', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        const response = JSON.parse(xhr.responseText);
-                        if (response.success) {
-                            window.location.href = "login.asp?registered=true";
-                        } else {
-                            changeErrorMessage('Error registering user.');
-                        }
-                    } else {
-                        changeErrorMessage('Error communicating with server.');
-                    }
-                }   
+        async function checkUsernameAvailability(username) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            toggleLoadingBar(true); // Show loading bar 
+
+            try {
+                const response = await fetch('ajax-endpoint.asp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `operation=usernameExists&username=${encodeURIComponent(username)}&csrfToken=${encodeURIComponent(csrfToken)}`
+                });
+                const data = await response.json();
+                await delay(500);
+                toggleLoadingBar(false); // Hide loading bar after request
+
+                if (!data.success) {
+                    togglePasswordFields(true);
+                } else {
+                    togglePasswordFields(false);
+                    changeErrorMessage('Username not available.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                toggleLoadingBar(false); // Hide loading bar on error
+                changeErrorMessage('Error communicating with server.');
             }
-            xhr.send('operation=register&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password));                
         }
+
+        async function registerUser(username, password) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            toggleLoadingBar(true); // Show loading bar
+
+            try {
+                const response = await fetch('ajax-endpoint.asp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `operation=register&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&csrfToken=${encodeURIComponent(csrfToken)}`
+                });
+                const data = await response.json();
+                await delay(500);
+                toggleLoadingBar(false); // Hide loading bar after request
+
+                if (data.success) {
+                    window.location.href = "login.asp?registered=true";
+                } else {
+                    changeErrorMessage('Error registering user.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                toggleLoadingBar(false); // Hide loading bar on error
+                changeErrorMessage('Error communicating with server.');
+            }
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
     </script>   
 </body>
 </html>
