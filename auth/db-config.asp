@@ -1,4 +1,0 @@
-<%
-Dim connStr
-connStr = "REMOVED"
-%>
