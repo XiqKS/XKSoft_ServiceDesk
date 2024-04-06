@@ -45,8 +45,8 @@ Class userManager
             If crypt.verifyPassword(Pass, rs("PasswordHash")) Then
                 Dim cookieManager: Set cookieManager = New CookieManager
                 Dim authToken: authToken = cookieManager.GenerateAuthString(32) ' Assuming you have a method for generating the auth token
-                cookieManager.SetSecureCookie "AuthToken", authToken, 30 ' Set auth token for 30 days
-                cookieManager.SetSecureCookie "LoggedInUser", User, 30 ' Set logged in username for 30 days
+                cookieManager.SetSecureCookieAndSession "AuthToken", authToken, 30, "AuthToken"' Set auth token for 30 days
+                cookieManager.SetSecureCookieAndSession "LoggedInUser", User, 30, "LoggedInUser"' Set logged in username for 30 days
                 Set cookieManager = nothing
                 HandleError "Error initializing authorization cookies"
 

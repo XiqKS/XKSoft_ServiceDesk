@@ -11,6 +11,17 @@ Class CookieManager
         Response.AddHeader "Set-Cookie", cookieValue
     End Sub
 
+        ' For setting the cookie and managing a session variable
+    Public Sub SetSecureCookieAndSession(name, value, days, sessionVarName)
+        Dim expireDate
+        expireDate = DateAdd("d", days, Now())
+
+        Dim cookieValue
+        cookieValue = name & "=" & value & "; expires=" & expireDate & "; Path=/; Secure; HttpOnly; SameSite=Strict"
+
+        Session(sessionVarName) = value
+    End Sub
+
     Public Function GenerateCSRFToken()
         ' Check if a CSRF token already exists in the session; generate one if it doesn't
         If IsEmpty(Session("CSRFToken")) Then

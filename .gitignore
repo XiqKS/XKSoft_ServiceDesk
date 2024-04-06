@@ -1,1 +1,18 @@
-auth/db-config.asp
+# User-specific files
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# Compiled source #
+bin/
+obj/
+
+# App settings
+**/appsettings.json
+**/appsettings.Development.json
+
+# Others
+**/db-config.asp
