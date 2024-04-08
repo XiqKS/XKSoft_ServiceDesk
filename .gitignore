@@ -1,6 +1,7 @@
 # User-specific files
 .vs/
 .vscode/
+
 *.user
 *.userosscache
 *.suo
@@ -9,6 +10,7 @@
 # Compiled source #
 bin/
 obj/
+ASP_API/
 
 # App settings
 **/appsettings.json

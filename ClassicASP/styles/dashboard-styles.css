@@ -1,3 +1,5 @@
+@import url("global-styles.css");
+
 .tickets-container {
     width: 100%;
     overflow-x: auto; /* Ensures the table is scrollable on smaller screens */
@@ -15,6 +17,10 @@ th, td {
 
 th {
     background-color: #f2f2f2;
+}
+
+.darkmode-toggle-container {
+    float: right;
 }
 
 .navbar {
@@ -43,3 +49,4 @@ th {
     background-color: #ddd;
     color: black;
 }
+

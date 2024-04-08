@@ -1,5 +1,4 @@
 // cookie-functions.js
-
 function setCookie(name, value, days) {
     var expires = "";
     if (days) {
@@ -24,5 +23,3 @@ function getCookie(name) {
     }
     return null;
 }
-
-

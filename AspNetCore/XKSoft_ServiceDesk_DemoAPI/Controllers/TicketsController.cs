@@ -11,7 +11,7 @@ using XKSoft_ServiceDesk_DemoAPI.Services.DataGenerator;
 
 namespace XKSoft_ServiceDesk_DemoAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TicketsController : ControllerBase
     {

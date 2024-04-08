@@ -1,13 +1,7 @@
 <%@ Language=VBScript %>
+<!--#include virtual="/utils/security-headers.asp" -->
 <!--#include file="CookieManager.Class.asp"-->
 <%
-    Response.AddHeader "Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self';"
-    Response.AddHeader "X-Content-Type-Options", "nosniff"
-    Response.AddHeader "X-Frame-Options", "DENY"
-    Response.AddHeader "X-XSS-Protection", "1; mode=block"
-    Response.AddHeader "Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload"
-    Response.AddHeader "Referrer-Policy", "strict-origin-when-cross-origin"
-
     dim csrfToken, cookieSetter: set cookieSetter = new CookieManager
     csrfToken = cookieSetter.GenerateCSRFToken
     set cookieSetter = nothing
@@ -26,7 +20,7 @@
 <body>
 
     <div class="main-container container">
-        <!--#include virtual="/dark-mode/dark-mode.asp" -->
+        <!--#include virtual="components/dark-mode/dark-mode.asp" -->
         <img src="../icons/helldivers2.svg" class="top-left-icon" alt="Helldivers2 Icon">
         <div class="main-content">
             <h1>XKSoft ServiceDesk</h1>

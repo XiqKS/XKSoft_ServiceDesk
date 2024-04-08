@@ -1,13 +1,7 @@
 <%@ Language=VBScript %>
+<!--#include virtual="/utils/security-headers.asp" -->
 <!--#include file="CookieManager.Class.asp"-->
 <%
-    Response.AddHeader "Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self';"
-    Response.AddHeader "X-Content-Type-Options", "nosniff"
-    Response.AddHeader "X-Frame-Options", "DENY"
-    Response.AddHeader "X-XSS-Protection", "1; mode=block"
-    Response.AddHeader "Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload"
-    Response.AddHeader "Referrer-Policy", "strict-origin-when-cross-origin"
-
     dim cookieSetter: set cookieSetter = new CookieManager
     csrfToken = cookieSetter.GenerateCSRFToken
     set cookieSetter = nothing
@@ -19,14 +13,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     
-    <script src="../scripts/inputPolicy.js"></script>
-    <link rel="stylesheet" href="../styles/login-styles.css">
+    <script src="/scripts/inputPolicy.js"></script>
+    <link rel="stylesheet" href="/styles/login-styles.css">
     <meta name="csrf-token" content="<%=csrfToken%>">
 </head>
 <body>
     <div class="main-container container">
-        <!--#include virtual="/dark-mode/dark-mode.asp" -->
-        <img src="../icons/helldivers2.svg" class="top-left-icon" alt="Helldivers2 Icon">
+        <!--#include virtual="components/dark-mode/dark-mode.asp" -->
+        <img src="/icons/helldivers2.svg" class="top-left-icon" alt="Helldivers2 Icon">
         <div class="main-content">
             <h1>XKSoft ServiceDesk</h1>
             <h2>Login</h2>
@@ -42,6 +36,6 @@
             <div id="loadingBar" class="hideField"></div>
         </div>
     </div>
-    <script src="../scripts/auth/login.js"></script>
+    <script src="/scripts/auth/login.js"></script>
 </body>
 </html>
