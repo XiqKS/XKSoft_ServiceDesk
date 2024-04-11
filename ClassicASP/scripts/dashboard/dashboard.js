@@ -1,5 +1,5 @@
 document.getElementById("generateTicketsBtn").addEventListener("click", function() {
-    fetch('https://localhost/api/Tickets/Generate/1', {
+    fetch('${apiURL}Tickets/Generate/1', {
         method: 'POST', // or 'GET' depending on your API
         headers: {
             'Content-Type': 'application/json',

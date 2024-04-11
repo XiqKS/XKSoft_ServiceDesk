@@ -75,18 +75,13 @@
     transition: background-color 0.1s ease;
 }
 
-.dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5, .dark-mode h6, .dark-mode p, .dark-mode label {
+.dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5, .dark-mode h6, .dark-mode p, .dark-mode label, .dark-mode span, .dark-mode th, .dark-mode td {
     color: var(--text-color-dark);
 }
 
-.dark-mode input {
+.dark-mode input, .dark-mode button {
     background-color: var(--text-color-dark);
     border-color: var(--text-color-dark);
-}
-
-.dark-mode button {
-    background-color: var(--text-color-dark);
-    color: var(--text-color-dark);
 }
 
 .dark-mode button:hover {
@@ -96,4 +91,9 @@
 .dark-mode *:focus {
     outline: none;
     border: 2.5px dashed var(--text-color-dark);
+}
+
+.dark-mode th {
+    background-color: var(--container-color-dark);
+    transition: background-color 0.1s ease;
 }

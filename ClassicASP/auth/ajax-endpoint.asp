@@ -57,7 +57,7 @@
     sub scanUsername(User)
         dim scanner: Set scanner = New InputPolicy
         if (Not scanner.CheckUsername(User)) Then
-            Response.Write "{""success"": false}"
+            Response.Write "{""success"": false, ""error"": ""Invalid username.""}"
             set scanner = nothing
             Response.End
         End if
@@ -67,7 +67,7 @@
     sub scanPassword(Pass)
         dim scanner: Set scanner = New InputPolicy
         if (Not scanner.CheckPassword(Pass)) Then
-            Response.Write "{""success"": false}"
+            Response.Write "{""success"": false, ""error"": ""Invalid password.""}"
             set scanner = nothing
             Response.End
         End if

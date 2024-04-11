@@ -13,8 +13,8 @@ obj/
 ASP_API/
 
 # App settings
-**/appsettings.json
 **/appsettings.Development.json
 
 # Others
-**/db-config.asp
+aspsettings.asp
+aspsettings.js

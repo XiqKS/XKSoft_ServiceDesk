@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     
-    <script src="/scripts/inputPolicy.js"></script>
+    <script src="/scripts/auth/inputPolicy.js"></script>
     <link rel="stylesheet" href="/styles/login-styles.css">
     <meta name="csrf-token" content="<%=csrfToken%>">
 </head>

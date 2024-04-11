@@ -26,19 +26,10 @@ body {
 button {
     background-color: var(--button-backgroundcolor-light);
     color: var(--button-color-light);
-    border: none;
-    border-radius: 1rem;
-    cursor: pointer;
-    font-size: 0.7rem;
 }
 
 input {
     background-color: var(--background-color-light);
-    border: 1px solid #ccc;
-    border-radius: 1rem;
-    box-sizing: border-box;
-    text-align: center;
-    font-size: 0.7rem;
 }
 
 .error-message {

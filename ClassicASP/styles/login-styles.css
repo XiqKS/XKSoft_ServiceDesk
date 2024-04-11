@@ -102,6 +102,18 @@ ul {
 input {
     width: 22rem;
     height: 1.25rem;
+    border: 1px solid #ccc;
+    border-radius: 1rem;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 0.7rem;
+}
+
+button {
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+    font-size: 0.7rem;
 }
 
 /* Wrapper specifically for the loading bar to restrict its overflow */

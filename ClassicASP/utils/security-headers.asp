@@ -1,5 +1,5 @@
 <%
-    Response.AddHeader "Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self';"
+    Response.AddHeader "Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://localhost:44308/;"
     Response.AddHeader "X-Content-Type-Options", "nosniff"
     Response.AddHeader "X-Frame-Options", "DENY"
     Response.AddHeader "X-XSS-Protection", "1; mode=block"

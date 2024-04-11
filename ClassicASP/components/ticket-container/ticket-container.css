@@ -1,0 +1,105 @@
+.container {
+    border-radius: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%; /* Adjust as needed */
+}
+table, th, td {
+    border: 1px solid black;
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background: var(--subcontainer-color-light);
+    transition: background-color 0.1s ease;
+    position: relative;
+    overflow: hidden; /* Ensure content doesn't overflow */
+}
+
+.filter-container {
+    display: flex;
+    justify-content: space-between; /* Centers horizontally */
+    align-items: center;
+    flex-direction: row;
+    background-color: #919191;
+    padding: 1rem;
+    position: inherit;
+}
+
+.slider {
+    max-width: 20%;
+}
+
+input {
+    border-radius: 1rem;
+}
+
+.range {
+    opacity: 0.5; /* Faded effect */
+}
+
+.range.active {
+    opacity: 1; /* Active state when the user interacts */
+}
+
+.date-range input[type="date"] {
+    cursor: pointer;
+}
+
+table th {
+    cursor: pointer; /* Indicates these are clickable for sorting */
+}
+
+.range-slider {
+    position: relative;
+    width: 200px;
+}
+
+.sort-indicator {
+    position: absolute;
+    right: 5px; /* Adjust based on padding */
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
+}
+
+/* Add your sort-asc and sort-desc styles here */
+.sort-asc::after,
+.sort-desc::after {
+    content: "";
+    display: block;
+}
+
+.sort-asc::after {
+    content: "▲"; /* Unicode up arrow */
+}
+
+.sort-desc::after {
+    content: "▼"; /* Unicode down arrow */
+}
+
+.sticky-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Ensures it stays above other content */
+}
+
+
+
+@media (max-width: 768px) {
+    .filter-container {
+
+    }
+}
+
+/* Example for a simple transition to a hamburger menu */
+@media (max-width: 480px) {
+    .hamburger-menu {
+        display: block;
+    }
+}

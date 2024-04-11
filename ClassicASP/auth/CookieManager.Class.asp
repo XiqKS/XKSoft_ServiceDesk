@@ -1,5 +1,7 @@
 <%
+' Class to customize and manage our security cookies.
 Class CookieManager
+    ' 
     Public Sub SetSecureCookie(name, value, days)
         Dim expireDate
         expireDate = DateAdd("d", days, Now())
@@ -18,6 +20,7 @@ Class CookieManager
 
         Dim cookieValue
         cookieValue = name & "=" & value & "; expires=" & expireDate & "; Path=/; Secure; HttpOnly; SameSite=Strict"
+        Response.AddHeader "Set-Cookie", cookieValue
 
         Session(sessionVarName) = value
     End Sub

@@ -92,7 +92,7 @@ async function checkUsernameAvailability(username) {
         if (data.success) {
             togglePasswordFields(true);
         } else {
-            changeErrorMessage('Username not available.');
+            changeErrorMessage('Username not found.');
         }
     } catch (error) {
         console.error('Error:', error);

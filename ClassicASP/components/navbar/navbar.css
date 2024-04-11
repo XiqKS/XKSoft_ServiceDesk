@@ -2,10 +2,12 @@
 .navbar {
     background-color: #333;
     overflow: hidden;
+    position: sticky;
+    top: 0;
+    z-index: 1050; /* Ensure the navbar stays on top of other content */
 }
 
 .navbar a {
-    float: left;
     display: block;
     color: white;
     text-align: center;
@@ -26,12 +28,39 @@
     display: none;
 }
 
+.menuItemsLeft {
+    float: left;
+}
+
+.menuItemsRight, .darkmode-toggle-container {
+    float: right;
+}
+
+.darkmode-toggle-container {
+    margin-top: 0.8rem;
+    position: relative;
+   
+}
+
+
+
 @media screen and (max-width: 600px) {
     .navbar a {
         float: none;
-        display: none;
+        padding: 0.3rem;
     }
+
+    .darkmode-toggle-container {
+        float: none;
+        left: 46%;
+    }
+
     .hamburger-menu button {
         display: block;
+    }
+
+    .menu-items {
+        margin-top: -3rem;
+        padding: 0.5rem;
     }
 }

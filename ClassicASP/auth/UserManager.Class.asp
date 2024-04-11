@@ -1,4 +1,4 @@
-<!--#include file="db-config.asp"-->
+<!--#include virtual="/utils/aspsettings.asp" -->
 <!--#include file="Crypto.Class.asp"-->
 <!--#include file="InputPolicy.Class.asp"-->
 <!--#include file="CookieManager.Class.asp"-->

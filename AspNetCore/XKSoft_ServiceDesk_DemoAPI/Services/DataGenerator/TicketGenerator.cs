@@ -14,8 +14,8 @@ namespace XKSoft_ServiceDesk_DemoAPI.Services.DataGenerator
             {
                 tickets.Add(new Ticket
                 {
-                    Title = $"Ticket {i + 1}",
-                    Description = $"This is an automatically generated ticket. Description for ticket {i + 1}.",
+                    Title = $"Ticket",
+                    Description = $"This is an automatically generated ticket!",
                     Status = statuses[random.Next(statuses.Count)],
                     Priority = random.Next(1, 5), // Assuming priorities range from 1 to 4
                     CreationDate = DateTime.Now.AddDays(-random.Next(0, 30)),

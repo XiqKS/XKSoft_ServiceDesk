@@ -13,7 +13,7 @@ if darkModeEnabled = "" then
     darkModeEnabled = "false"
 end if
 %>
-<link rel="stylesheet" href="/components/dark-mode/dark-styles.css">
+<link rel="stylesheet" href="/components/dark-mode/dark-mode.css">
 <script src="/scripts/client-cookie-functions.js"></script>
 <div class="darkmode-toggle-container" tabindex="999" id="darkModeToggle">
     <input type="checkbox" id="darkmode-toggle" class="darkmode-toggle-checkbox">

@@ -105,6 +105,30 @@ namespace XKSoft_ServiceDesk_DemoAPI.Controllers
             return Ok(tickets);
         }
 
+        [HttpPost("Get/IDRange")]
+        public async Task<ActionResult<dynamic>> GetRangeOfTicketIDs()
+        {
+            try
+            {
+                // Assuming _context is your database context and Tickets is your DbSet<Ticket>
+                var minTicketId = await _context.Tickets.MinAsync(t => t.TicketId);
+                var maxTicketId = await _context.Tickets.MaxAsync(t => t.TicketId);
+
+                if (minTicketId == 0 && maxTicketId == 0)
+                {
+                    return NotFound("No tickets found in the database.");
+                }
+
+                return Ok(new { MinTicketId = minTicketId, MaxTicketId = maxTicketId });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (consider using a logging framework)
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
+
         // DELETE: api/Tickets/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTicket(int id)
