@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     
     // Fetch tickets data from the API
-    fetch(`${apiURL}Tickets`)
+    fetch(`${API_BASE_URL}Tickets`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
     initDualRangeSlider('ticketIDSlider','ID #', callbackID);
     configDualRangeSlider('ticketIDSlider',0,10000);
     
-    fetch(`${apiURL}Tickets/Get/IDRange`, {
+    fetch(`${API_BASE_URL}Tickets/Get/IDRange`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

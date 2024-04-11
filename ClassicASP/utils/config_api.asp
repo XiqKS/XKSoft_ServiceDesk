@@ -1,0 +1,1 @@
+<% Response.Write("var API_BASE_URL = '" & Server.GetEnviron("API_BASE_URL") & "';") %>

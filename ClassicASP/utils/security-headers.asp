@@ -1,5 +1,11 @@
 <%
-    Response.AddHeader "Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://localhost:44308/;"
+    Dim apiUrl
+    apiUrl = Server.GetEnviron("API_BASE_URL")
+
+    Dim cspValue
+    cspValue = "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' " & apiUrl & ";"
+
+    Response.AddHeader "Content-Security-Policy", cspValue
     Response.AddHeader "X-Content-Type-Options", "nosniff"
     Response.AddHeader "X-Frame-Options", "DENY"
     Response.AddHeader "X-XSS-Protection", "1; mode=block"

@@ -16,6 +16,7 @@ Class userManager
     ' CONSTRUCTOR: Initializes the database connection
     Private Sub Class_Initialize()
         Set conn = Server.CreateObject("ADODB.Connection")
+        set connStr = Server.GetEnviron("DBConnectionString")
         conn.Open connStr
 
         Session.Timeout = 20

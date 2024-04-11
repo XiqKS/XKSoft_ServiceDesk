@@ -53,6 +53,5 @@
         </tbody>
     </table>
 </div>
-
-<script src="/utils/aspsettings.js"></script>
+<!--#include virtual="/utils/config_api.asp" -->
 <script src="/components/ticket-container/ticket-container.js"></script>
