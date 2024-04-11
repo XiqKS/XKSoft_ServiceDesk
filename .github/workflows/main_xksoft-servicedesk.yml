@@ -1,4 +1,4 @@
-name: Build and deploy ASP.Net Core app to Azure Web App - XKSoft-ServiceDesk
+name: Build and deploy to Azure Web App
 
 on:
   push:
@@ -7,54 +7,61 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
 
+      # Setup .NET Core
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.x'  # Specify exact prerelease version if necessary
+          dotnet-version: '8.x'  # Ensure this matches your project's requirement
           include-prerelease: true
 
+      # Build ASP.NET Core Project
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build ./AspNetCore/XKSoft_ServiceDesk_DemoAPI/XKSoft_ServiceDesk_DemoAPI.csproj --configuration Release
 
+      # Publish ASP.NET Core Project
       - name: dotnet publish
-        run: dotnet publish -c Release -o ./publish  # Changed to a more typical directory
+        run: dotnet publish ./AspNetCore/XKSoft_ServiceDesk_DemoAPI/XKSoft_ServiceDesk_DemoAPI.csproj -c Release -o ${{runner.temp}}/myapp
 
-      - name: Upload artifact for deployment job
+      # Upload ASP.NET Core artifact for deployment
+      - name: Upload ASP.NET artifact for deployment
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
-          path: ./publish  # Ensure this matches the output of dotnet publish
+          path: ${{runner.temp}}/myapp
 
-  deploy:
-    runs-on: windows-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}  # Verify this output is correct
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: .net-app
-      
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_10ABB38248794EB48E8CFC2EC269F500 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_1E096AC5315944D8A57030E94B60457D }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3C02EDBE17F44B23B7833DE701B56724 }}
-
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
+      # Deploy ASP.NET Core to Azure Web App
+      - name: Deploy ASP.NET Core to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'XKSoft-ServiceDesk'
+          app-name: 'XKSoft-ServiceDesk-API'
           slot-name: 'Production'
-          package: ./publish  # Specify the exact path if needed
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{runner.temp}}/myapp
+
+      # Prepare Classic ASP files for deployment
+      - name: Prepare Classic ASP files
+        run: |
+          mkdir ${{runner.temp}}/classicasp
+          cp -r ./ClassicASP/* ${{runner.temp}}/classicasp/
+
+      # Upload Classic ASP artifact for deployment
+      - name: Upload Classic ASP artifact for deployment
+        uses: actions/upload-artifact@v3
+        with:
+          name: classic-asp
+          path: ${{runner.temp}}/classicasp
+
+      # Deploy Classic ASP to Azure Web App
+      - name: Deploy Classic ASP to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'XKSoft-ServiceDesk-ClassicASP'  # Make sure to have a separate web app or appropriate routing for Classic ASP
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_CLASSICASP }}
+          package: ${{runner.temp}}/classicasp
