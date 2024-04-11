@@ -45,7 +45,7 @@ jobs:
       - name: Deploy ASP.NET Core to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'XKSoft-ServiceDesk-API'
+          app-name: 'xksoft-servicedesk-api'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ${{runner.temp}}/myapp
@@ -67,7 +67,7 @@ jobs:
       - name: Deploy Classic ASP to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'XKSoft-ServiceDesk-ClassicASP'  # Make sure to have a separate web app or appropriate routing for Classic ASP
+          app-name: 'XKSoft-ServiceDesk'  # Make sure to have a separate web app or appropriate routing for Classic ASP
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_CLASSICASP }}
           package: ${{runner.temp}}/classicasp
