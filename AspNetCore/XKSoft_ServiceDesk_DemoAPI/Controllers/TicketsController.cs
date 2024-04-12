@@ -154,7 +154,7 @@ namespace XKSoft_ServiceDesk_DemoAPI.Controllers
             var settings = new
             {
 
-                DatabaseConnectionString = _configuration.GetConnectionString("DefaultConnection"),
+                DatabaseConnectionString = _configuration.GetConnectionString("ClassicDefaultConnection"),
                 ApiBaseUrl = baseUrl + "/api/",
                 // other necessary config variables
             };
