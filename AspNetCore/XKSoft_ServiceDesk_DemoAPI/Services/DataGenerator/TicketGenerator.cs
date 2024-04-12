@@ -20,7 +20,7 @@ namespace XKSoft_ServiceDesk_DemoAPI.Services.DataGenerator
                     Priority = random.Next(1, 5), // Assuming priorities range from 1 to 4
                     CreationDate = DateTime.Now.AddDays(-random.Next(0, 30)),
                     ClosureDate = null
-                });
+                }); 
             }
 
             // Randomly assign a closure date to closed tickets

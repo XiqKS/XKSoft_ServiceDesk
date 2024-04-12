@@ -24,7 +24,7 @@ dim userName: userName = Session("LoggedInUser")
 
     <h1>Welcome, <%=userName%>!</h1>
     <button id="generateTicketsBtn">Generate Tickets</button>
-    <!--#include virtual="/utils/config_api.asp" -->
+    <script src="/utils/jsAJAX.asp"></script>
     <script src="/scripts/dashboard/dashboard.js"></script>
 </body>
 </html>

@@ -16,5 +16,4 @@ ASP_API/
 **/appsettings.Development.json
 
 # Others
-aspsettings.asp
-aspsettings.js
+aspDevelopmentVars.asp

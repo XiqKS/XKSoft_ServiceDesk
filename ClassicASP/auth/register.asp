@@ -52,6 +52,6 @@
             <div id="loadingBar" class="hideField"></div>
         </div>
     </div>
-    <script src="../scripts/auth/register.js"></script>
+    <script src="/scripts/auth/register.js"></script>
 </body>
 </html>

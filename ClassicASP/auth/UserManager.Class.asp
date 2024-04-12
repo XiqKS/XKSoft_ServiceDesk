@@ -1,4 +1,4 @@
-<!--#include virtual="/utils/aspsettings.asp" -->
+<!--#include virtual="/utils/security-headers.asp" -->
 <!--#include file="Crypto.Class.asp"-->
 <!--#include file="InputPolicy.Class.asp"-->
 <!--#include file="CookieManager.Class.asp"-->
@@ -15,12 +15,20 @@ Class userManager
     
     ' CONSTRUCTOR: Initializes the database connection
     Private Sub Class_Initialize()
+        On Error Resume Next
         Set conn = Server.CreateObject("ADODB.Connection")
-        set connStr = Server.GetEnviron("DBConnectionString")
+        connStr = Session("DBConnectionString")
         conn.Open connStr
 
-        Session.Timeout = 20
+        If conn.State = 0 Then
+            Response.Write "Failed to open connection: " & Err.Description
+            Err.Clear
+        Else
+            Session.Timeout = 20
+        End If
+        On Error GoTo 0
     End Sub
+
     
     public Function AuthenticateUser(User, Pass)
         On Error Resume Next

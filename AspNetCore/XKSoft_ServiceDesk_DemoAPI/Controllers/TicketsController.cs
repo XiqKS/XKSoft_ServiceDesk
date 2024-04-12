@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using XKSoft_ServiceDesk_DemoAPI.Data;
 using XKSoft_ServiceDesk_DemoAPI.Models;
@@ -16,11 +11,14 @@ namespace XKSoft_ServiceDesk_DemoAPI.Controllers
     public class TicketsController : ControllerBase
     {
         private readonly ServiceDeskDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public TicketsController(ServiceDeskDbContext context)
+        public TicketsController(ServiceDeskDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
+
 
 
         // GET: api/Tickets
@@ -143,6 +141,24 @@ namespace XKSoft_ServiceDesk_DemoAPI.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpGet]
+        [Route("config/settings")]
+        public IActionResult GetConfiguration()
+        {
+
+            // Retrieve the base URL dynamically from the current request
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            var settings = new
+            {
+
+                DatabaseConnectionString = _configuration.GetConnectionString("DefaultConnection"),
+                ApiBaseUrl = baseUrl + "/api/",
+                // other necessary config variables
+            };
+            return Ok(settings);
         }
 
         // Utility method to check if a Ticket exists

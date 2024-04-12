@@ -1,6 +1,5 @@
 using XKSoft_ServiceDesk_DemoAPI.Data;
 using Microsoft.EntityFrameworkCore;
-using XKSoft_ServiceDesk_DemoAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
