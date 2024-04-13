@@ -11,10 +11,8 @@
         Call http.Send()
 
         If http.Status = 200 Then
-            ' Parse JSON here (this example assumes you have a JSON parser or handle it manually)
-            ' For demonstration, let's assume the API returns simple delimited data
             Dim settings
-            settings = Split(http.responseText, ";") ' Very simplistic parsing logic
+            settings = Split(http.responseText, ";")
 
             ' Store in session variables
             Session("DBConnectionString") = settings(0)

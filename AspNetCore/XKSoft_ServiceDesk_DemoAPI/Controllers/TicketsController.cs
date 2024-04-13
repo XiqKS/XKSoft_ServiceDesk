@@ -147,18 +147,12 @@ namespace XKSoft_ServiceDesk_DemoAPI.Controllers
         [Route("config/settings")]
         public IActionResult GetConfiguration()
         {
+            var baseUrl = $"{Request.Scheme}://{Request.Host}/api/";
+            string connectionString = _configuration.GetConnectionString("ClassicDefaultConnection");
 
-            // Retrieve the base URL dynamically from the current request
-            var baseUrl = $"{Request.Scheme}://{Request.Host}";
-
-            var settings = new
-            {
-
-                DatabaseConnectionString = _configuration.GetConnectionString("ClassicDefaultConnection"),
-                ApiBaseUrl = baseUrl + "/api/",
-                // other necessary config variables
-            };
-            return Ok(settings);
+            // Create a simple delimited string
+            string simpleResponse = $"ConnectionString={connectionString};ApiBaseUrl={baseUrl}";
+            return Ok(simpleResponse);
         }
 
         // Utility method to check if a Ticket exists
