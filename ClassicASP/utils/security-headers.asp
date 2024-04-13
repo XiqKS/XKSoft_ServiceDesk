@@ -4,6 +4,7 @@
     If IsEmpty(Session("APIBaseUrl")) Or IsEmpty(Session("DBConnectionString")) Then
         Dim http, apiUrl
         Set http = CreateObject("MSXML2.ServerXMLHTTP")
+
         apiUrl = "https://xksoft-servicedesk-api.azurewebsites.net/api/tickets/config/settings"
 
         ' Sending the request
@@ -14,17 +15,11 @@
             Dim responseText, settings
             responseText = http.responseText ' Get the response as a plain text
 
-            ' Split the response based on ';'
-            settings = Split(responseText, ";")
-
-            ' Further split each part to get key and value
-            Dim connStringParts, apiUrlParts
-            apiUrlParts = Split(settings(0), "=")
-            connStringParts = Split(settings(1), "=")
+            settings = Split(responseText, "|")
 
             ' Extract values
-            Session("DBConnectionString") = connStringParts(1)
-            Session("APIBaseUrl") = apiUrlParts(1)
+            Session("DBConnectionString") = settings(0)
+            Session("APIBaseUrl") = settings(1)
         Else
             ' Handle errors or log them
             Response.Write("Error fetching configuration: " & http.Status)

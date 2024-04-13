@@ -151,7 +151,7 @@ namespace XKSoft_ServiceDesk_DemoAPI.Controllers
             string connectionString = _configuration.GetConnectionString("ClassicDefaultConnection");
 
             // Create a simple delimited string
-            string simpleResponse = $"ConnectionString={connectionString};ApiBaseUrl={baseUrl}";
+            string simpleResponse = $"{connectionString}|{baseUrl}";
             return Ok(simpleResponse);
         }
 
