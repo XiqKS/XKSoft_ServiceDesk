@@ -19,8 +19,8 @@
 
             ' Further split each part to get key and value
             Dim connStringParts, apiUrlParts
-            connStringParts = Split(settings(0), "=")
-            apiUrlParts = Split(settings(1), "=")
+            apiUrlParts = Split(settings(0), "=")
+            connStringParts = Split(settings(1), "=")
 
             ' Extract values
             Session("DBConnectionString") = connStringParts(1)
