@@ -6,7 +6,7 @@ using XKSoft_ServiceDesk_DemoAPI.Services.DataGenerator;
 
 namespace XKSoft_ServiceDesk_DemoAPI.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class TicketsController : ControllerBase
     {
@@ -144,7 +144,7 @@ namespace XKSoft_ServiceDesk_DemoAPI.Controllers
         }
 
         [HttpGet]
-        [Route("config/settings")]
+        [Route("api/config/settings")]
         public IActionResult GetConfiguration()
         {
 
