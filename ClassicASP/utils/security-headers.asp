@@ -11,12 +11,20 @@
         Call http.Send()
 
         If http.Status = 200 Then
-            Dim settings
-            settings = Split(http.responseText, ";")
+            Dim responseText, settings
+            responseText = http.responseText ' Get the response as a plain text
 
-            ' Store in session variables
-            Session("DBConnectionString") = settings(0)
-            Session("APIBaseUrl") = settings(1)
+            ' Split the response based on ';'
+            settings = Split(responseText, ";")
+
+            ' Further split each part to get key and value
+            Dim connStringParts, apiUrlParts
+            connStringParts = Split(settings(0), "=")
+            apiUrlParts = Split(settings(1), "=")
+
+            ' Extract values
+            Session("DBConnectionString") = connStringParts(1)
+            Session("APIBaseUrl") = apiUrlParts(1)
         Else
             ' Handle errors or log them
             Response.Write("Error fetching configuration: " & http.Status)
