@@ -144,7 +144,7 @@ namespace XKSoft_ServiceDesk_DemoAPI.Controllers
         }
 
         [HttpGet]
-        [Route("api/config/settings")]
+        [Route("config/settings")]
         public IActionResult GetConfiguration()
         {
 

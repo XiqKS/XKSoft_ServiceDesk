@@ -4,7 +4,7 @@
     If IsEmpty(Session("APIBaseUrl")) Or IsEmpty(Session("DBConnectionString")) Then
         Dim http, apiUrl
         Set http = CreateObject("MSXML2.ServerXMLHTTP")
-        apiUrl = "https://xksoft-servicedesk-api.azurewebsites.net/api/config/settings"
+        apiUrl = "https://xksoft-servicedesk-api.azurewebsites.net/api/tickets/config/settings"
 
         ' Sending the request
         Call http.Open("GET", apiUrl, False)

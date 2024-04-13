@@ -5,7 +5,7 @@
     <script type="text/javascript">
         function fetchConfig() {
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "https://xksoft-servicedesk-api.azurewebsites.net/api/config/settings", true);
+            xhr.open("GET", "https://xksoft-servicedesk-api.azurewebsites.net/api/tickets/config/settings", true);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     // Assuming the response is in JSON format
