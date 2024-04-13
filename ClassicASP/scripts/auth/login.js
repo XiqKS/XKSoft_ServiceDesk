@@ -78,7 +78,7 @@ async function checkUsernameAvailability(username) {
     toggleLoadingBar(true); // Show loading bar 
 
     try {
-        const response = await fetch('ajax-endpoint.asp', {
+        const response = await fetch('/auth/ajax-endpoint.asp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -106,7 +106,7 @@ async function authenticateUser(username, password) {
     toggleLoadingBar(true); // Show loading bar
 
     try {
-        const response = await fetch('ajax-endpoint.asp', {
+        const response = await fetch('/auth/ajax-endpoint.asp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -118,7 +118,7 @@ async function authenticateUser(username, password) {
         toggleLoadingBar(false); // Hide loading bar after request
 
         if (data.success) {
-            window.location.href = "../dashboard/dashboard.asp"; // Adjust the redirect URL as needed
+            window.location.href = "/dashboard/dashboard.asp"; // Adjust the redirect URL as needed
         } else {
             changeErrorMessage('Error logging in user.');
         }
