@@ -16,4 +16,4 @@ ASP_API/
 **/appsettings.Development.json
 
 # Others
-aspDevelopmentVars.asp
+newcert.pfx

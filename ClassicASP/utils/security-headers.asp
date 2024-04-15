@@ -1,11 +1,10 @@
-
 <%
     ' Check if the session variables are already set
     If IsEmpty(Session("APIBaseUrl")) Or IsEmpty(Session("DBConnectionString")) Then
         Dim http, apiUrl
         Set http = CreateObject("MSXML2.ServerXMLHTTP")
 
-        apiUrl = "https://xksoft-servicedesk-api.azurewebsites.net/api/tickets/config/settings"
+        apiUrl = "https://xksoft-servicedesk-api.azurewebsites.net/api/Tickets/config/settings"
 
         ' Sending the request
         Call http.Open("GET", apiUrl, False)

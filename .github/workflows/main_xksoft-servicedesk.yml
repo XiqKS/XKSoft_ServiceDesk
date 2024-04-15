@@ -1,4 +1,4 @@
-name: Build and deploy to Azure Web App
+name: Build and deploy to Azure Web App and Container Instance
 
 on:
   push:
@@ -26,20 +26,11 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Build ASP.NET Core Project
-      - name: Build with dotnet
-        run: dotnet build ./AspNetCore/XKSoft_ServiceDesk_DemoAPI/XKSoft_ServiceDesk_DemoAPI.csproj --configuration Release
-
-      # Publish ASP.NET Core Project
-      - name: dotnet publish
-        run: dotnet publish ./AspNetCore/XKSoft_ServiceDesk_DemoAPI/XKSoft_ServiceDesk_DemoAPI.csproj -c Release -o ${{runner.temp}}/myapp
-
-      # Upload ASP.NET Core artifact for deployment
-      - name: Upload ASP.NET artifact for deployment
-        uses: actions/upload-artifact@v3
-        with:
-          name: .net-app
-          path: ${{runner.temp}}/myapp
+      # Build and Publish ASP.NET Core Project
+      - name: Build and Publish ASP.NET Core
+        run: |
+          dotnet build ./AspNetCore/XKSoft_ServiceDesk_DemoAPI/XKSoft_ServiceDesk_DemoAPI.csproj --configuration Release
+          dotnet publish ./AspNetCore/XKSoft_ServiceDesk_DemoAPI/XKSoft_ServiceDesk_DemoAPI.csproj -c Release -o ${{runner.temp}}/myapp
 
       # Deploy ASP.NET Core to Azure Web App
       - name: Deploy ASP.NET Core to Azure Web App
@@ -50,24 +41,22 @@ jobs:
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ${{runner.temp}}/myapp
 
-      # Prepare Classic ASP files for deployment
-      - name: Prepare Classic ASP files
+      # Build Docker Image and Push to ACR
+      - name: Build and Push Docker Image
         run: |
-          mkdir ${{runner.temp}}/classicasp
-          cp -r ./ClassicASP/* ${{runner.temp}}/classicasp/
+          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/xksoftservicedesk:latest -f Dockerfile .
+          docker login ${{ secrets.REGISTRY_LOGIN_SERVER }} --username ${{ secrets.REGISTRY_USERNAME }} --password ${{ secrets.REGISTRY_PASSWORD }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/xksoftservicedesk:latest
 
-      # Upload Classic ASP artifact for deployment
-      - name: Upload Classic ASP artifact for deployment
-        uses: actions/upload-artifact@v3
-        with:
-          name: classic-asp
-          path: ${{runner.temp}}/classicasp
-
-      # Deploy Classic ASP to Azure Web App
-      - name: Deploy Classic ASP to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'XKSoft-ServiceDesk'  # Make sure to have a separate web app or appropriate routing for Classic ASP
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_CLASSICASP }}
-          package: ${{runner.temp}}/classicasp
+      # Deploy to Azure Container Instance
+      - name: Deploy to Azure Container Instance
+        run: |
+          az container create --resource-group XKSoft_ServiceDesk_Resources \
+            --name xksoftservicedesk-container \
+            --image ${{ secrets.REGISTRY_LOGIN_SERVER }}/xksoftservicedesk:latest \
+            --cpu 1 --memory 1.5 \
+            --registry-login-server ${{ secrets.REGISTRY_LOGIN_SERVER }} \
+            --registry-username ${{ secrets.REGISTRY_USERNAME }} \
+            --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
+            --dns-name-label xksoftservicedesk-unique-label \
+            --ports 80 443

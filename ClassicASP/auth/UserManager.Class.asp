@@ -19,7 +19,6 @@ Class userManager
         Set conn = Server.CreateObject("ADODB.Connection")
         connStr = Session("DBConnectionString")
         conn.Open connStr
-
         If conn.State = 0 Then
             Response.Write "Failed to open connection: " & Err.Description
             Err.Clear
