@@ -15,5 +15,6 @@ ASP_API/
 # App settings
 **/appsettings.Development.json
 
+
 # Others
 newcert.pfx
