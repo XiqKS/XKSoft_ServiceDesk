@@ -1,17 +1,15 @@
 # Use the ASP.NET 4.8 base image from Microsoft
 FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-ltsc2019
 
-# Install Windows Features necessary for your application
+# Install Windows Features and remove the default IIS content
 RUN powershell -Command Add-WindowsFeature Web-Asp; \
     Add-WindowsFeature Web-Basic-Auth; \
     Add-WindowsFeature Web-Windows-Auth; \
     Add-WindowsFeature Web-CGI; \
     Add-WindowsFeature Web-ISAPI-Ext; \
     Add-WindowsFeature Web-ISAPI-Filter; \
-    Add-WindowsFeature Web-Includes
-
-# Remove default web site files
-RUN powershell -Command Remove-Item -Recurse C:\inetpub\wwwroot\*
+    Add-WindowsFeature Web-Includes; \
+    Remove-Item -Recurse C:\inetpub\wwwroot\*
 
 # Register DLLs using RegAsm
 COPY ClassicASP/dependencies/*.dll C:/Windows/Microsoft.NET/Framework64/v4.0.30319/
@@ -19,10 +17,6 @@ RUN powershell -Command C:\Windows\Microsoft.NET\Framework64\v4.0.30319\RegAsm.e
     C:\Windows\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe /tlb /codebase C:/Windows/Microsoft.NET/Framework64\v4.0.30319/Isopoh.Cryptography.Argon2.dll; \
     C:\Windows\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe /tlb /codebase C:/Windows/Microsoft.NET/Framework64\v4.0.30319/Isopoh.Cryptography.Blake2b.dll; \
     C:\Windows\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe /tlb /codebase C:/Windows/Microsoft.NET/Framework64\v4.0.30319/Isopoh.Cryptography.SecureArray.dll
-
-# Copy and execute the SSL setup script (move this down if it changes frequently)
-COPY setup-ssl.ps1 C:/setup-ssl.ps1
-RUN powershell -ExecutionPolicy Bypass -File C:/setup-ssl.ps1
 
 # Copy the Classic ASP files from your project into the container (if these change frequently, keep this step later)
 COPY ClassicASP/ C:/inetpub/wwwroot/

@@ -45,7 +45,8 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/xksoftservicedesk:latest -f Dockerfile .
-          docker login ${{ secrets.REGISTRY_LOGIN_SERVER }} --username ${{ secrets.REGISTRY_USERNAME }} --password ${{ secrets.REGISTRY_PASSWORD }}
+          echo ${{ secrets.REGISTRY_PASSWORD }} | docker login ${{ secrets.REGISTRY_LOGIN_SERVER }} --username ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/xksoftservicedesk:latest
 
       # Deploy to Azure Container Instance
