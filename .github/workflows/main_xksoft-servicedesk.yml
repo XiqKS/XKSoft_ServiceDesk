@@ -35,4 +35,4 @@ jobs:
 
       - name: Deploy to Azure Web App
         run: |
-          az webapp deploy --name xksoft-servicedesk-api --resource-group XKSoft_ServiceDesk_Resources --src-path ${{runner.temp}}/myapp.zip --type zip
+          az webapp deploy --name xksoft-servicedesk-api --resource-group XKSoft_ServiceDesk_Resources --src-path ${{runner.temp}}/myapp
