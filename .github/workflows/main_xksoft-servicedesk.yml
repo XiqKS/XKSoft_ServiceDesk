@@ -44,4 +44,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: yourusername/yourrepo:latest
+          tags: xiqks/xksoftservicedesk:latest
