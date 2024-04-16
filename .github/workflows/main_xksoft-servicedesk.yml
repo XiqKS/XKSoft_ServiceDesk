@@ -1,4 +1,4 @@
-name: Build and deploy to Azure Web App and Container Instance
+name: Build, Push and Deploy
 
 on:
   push:
@@ -17,14 +17,8 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.x'  # Ensure this matches your project's requirement
+          dotnet-version: '8.x'
           include-prerelease: true
-
-      # Azure Login
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       # Build and Publish ASP.NET Core Project
       - name: Build and Publish ASP.NET Core
@@ -32,32 +26,31 @@ jobs:
           dotnet build ./AspNetCore/XKSoft_ServiceDesk_DemoAPI/XKSoft_ServiceDesk_DemoAPI.csproj --configuration Release
           dotnet publish ./AspNetCore/XKSoft_ServiceDesk_DemoAPI/XKSoft_ServiceDesk_DemoAPI.csproj -c Release -o ${{runner.temp}}/myapp
 
-      # Deploy ASP.NET Core to Azure Web App
-      - name: Deploy ASP.NET Core to Azure Web App
-        uses: azure/webapps-deploy@v2
+      # Docker Login to Docker Hub
+      - name: Docker Login
+        uses: docker/login-action@v1
         with:
-          app-name: 'xksoft-servicedesk-api'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ${{runner.temp}}/myapp
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Build Docker Image and Push to ACR
+      # Build and Push Docker Image to Docker Hub
       - name: Build and Push Docker Image
-        run: |
-          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/xksoftservicedesk:latest -f Dockerfile .
-          echo ${{ secrets.REGISTRY_PASSWORD }} | docker login ${{ secrets.REGISTRY_LOGIN_SERVER }} --username ${{ secrets.REGISTRY_USERNAME }} --password-stdin
-
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/xksoftservicedesk:latest
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: yourusername/yourrepo:latest
 
       # Deploy to Azure Container Instance
       - name: Deploy to Azure Container Instance
         run: |
           az container create --resource-group XKSoft_ServiceDesk_Resources \
             --name xksoftservicedesk-container \
-            --image ${{ secrets.REGISTRY_LOGIN_SERVER }}/xksoftservicedesk:latest \
+            --image docker.io/yourusername/yourrepo:latest \
             --cpu 1 --memory 1.5 \
-            --registry-login-server ${{ secrets.REGISTRY_LOGIN_SERVER }} \
-            --registry-username ${{ secrets.REGISTRY_USERNAME }} \
-            --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
+            --registry-login-server docker.io \
+            --registry-username ${{ secrets.DOCKER_USERNAME }} \
+            --registry-password ${{ secrets.DOCKER_PASSWORD }} \
             --dns-name-label xksoftservicedesk-unique-label \
             --ports 80 443
