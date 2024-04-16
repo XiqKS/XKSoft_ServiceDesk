@@ -1,4 +1,4 @@
-name: Build and Deploy ASP.NET Core to Azure Web App
+name: Build and Deploy ASP.NET Core and Azure Function to Azure
 
 on:
   push:
@@ -7,26 +7,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_and_deploy:
+  build_and_deploy_api:
     runs-on: windows-latest
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup .NET Core
+      - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.x'  # Ensure this matches your project's requirement
+          dotnet-version: '8.x'
           include-prerelease: true
 
       - name: Build ASP.NET Core Project
-        run: |
-          dotnet build ./AspNetCore/XKSoft_ServiceDesk_DemoAPI/XKSoft_ServiceDesk_DemoAPI.csproj --configuration Release
+        run: dotnet build ./AspNetCore/XKSoft_ServiceDesk_DemoAPI/XKSoft_ServiceDesk_DemoAPI.csproj --configuration Release
 
       - name: Publish ASP.NET Core Project
-        run: |
-          dotnet publish ./AspNetCore/XKSoft_ServiceDesk_DemoAPI/XKSoft_ServiceDesk_DemoAPI.csproj -c Release -o ${{runner.temp}}/myapp
+        run: dotnet publish ./AspNetCore/XKSoft_ServiceDesk_DemoAPI/XKSoft_ServiceDesk_DemoAPI.csproj -c Release -o ${{runner.temp}}/myapp
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -38,3 +36,28 @@ jobs:
         with:
           app-name: 'xksoft-servicedesk-api'
           package: ${{runner.temp}}/myapp
+
+  build_and_deploy_function:
+    needs: build_and_deploy_api
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.x'
+          include-prerelease: true
+
+      - name: Build and Publish Azure Function
+        run: |
+          dotnet build ./ACIUpdateFunction/ACIUpdateFunction.csproj --configuration Release
+          dotnet publish ./ACIUpdateFunction/ACIUpdateFunction.csproj -c Release -o ${{runner.temp}}/functionapp
+
+      - name: Deploy Azure Function
+        uses: azure/functions-action@v1
+        with:
+          app-name: 'xksoftservicedesk-function'
+          package: ${{runner.temp}}/functionapp

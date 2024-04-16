@@ -1,30 +1,15 @@
 <%
     ' Check if the session variables are already set
     If IsEmpty(Session("APIBaseUrl")) Or IsEmpty(Session("DBConnectionString")) Then
-        Dim http, apiUrl
-        Set http = CreateObject("MSXML2.ServerXMLHTTP")
-
-        apiUrl = "https://xksoft-servicedesk-api.azurewebsites.net/api/Tickets/config/settings"
-
-        ' Sending the request
-        Call http.Open("GET", apiUrl, False)
-        Call http.Send()
-
-        If http.Status = 200 Then
-            Dim responseText, settings
-            responseText = http.responseText ' Get the response as a plain text
-
-            settings = Split(responseText, "|")
-
-            ' Extract values
-            Session("DBConnectionString") = settings(0)
-            Session("APIBaseUrl") = settings(1)
-        Else
-            ' Handle errors or log them
-            Response.Write("Error fetching configuration: " & http.Status)
+        
+        ' Retrieve environment variables directly instead of using an API call
+        Session("DBConnectionString") = CreateObject("WScript.Shell").ExpandEnvironmentStrings("%DBConnectionString%")
+        Session("APIBaseUrl") = CreateObject("WScript.Shell").ExpandEnvironmentStrings("%APIBaseUrl%")
+        
+        If Len(Session("DBConnectionString")) = 0 Or Len(Session("APIBaseUrl")) = 0 Then
+            ' Handle the case where environment variables are not set
+            Response.Write("Error: Required configuration is missing.")
         End If
-
-        Set http = Nothing
     End If
 
     Dim cspValue
@@ -36,4 +21,10 @@
     Response.AddHeader "X-XSS-Protection", "1; mode=block"
     Response.AddHeader "Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload"
     Response.AddHeader "Referrer-Policy", "strict-origin-when-cross-origin"
+    
+
+    Response.Write("<!-- Debug: Connection String = " & Session("DBConnectionString") & " -->")
+    Response.Write("<!-- Debug: API String = " & Session("APIBaseUrl") & " -->")
+
+
 %>
