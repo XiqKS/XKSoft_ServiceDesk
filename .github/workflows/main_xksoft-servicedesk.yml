@@ -33,15 +33,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Setup Docker Buildx (If using Buildx features)
-      - name: Docker Setup Buildx
-        uses: docker/setup-buildx-action@v3.3.0
-
       # Build and Push Docker Image to Docker Hub
       - name: Build and Push Docker Image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: xiqks/xksoftservicedesk:latest
+        run: |
+          docker build -t xiqks/xksoftservicedesk:latest .
+          docker push xiqks/xksoftservicedesk:latest
+
+      # Update Container Instance via Azure Function Webhook
+      - name: Trigger Azure Function
+        run: |
+          curl -X POST "${{ secrets.WEBHOOK_URL }}"
