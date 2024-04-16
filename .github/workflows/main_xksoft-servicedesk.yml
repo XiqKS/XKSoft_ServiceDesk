@@ -33,6 +33,10 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # Setup Docker Buildx (If using Buildx features)
+      - name: Docker Setup Buildx
+        uses: docker/setup-buildx-action@v3.3.0
+
       # Build and Push Docker Image to Docker Hub
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
@@ -41,16 +45,3 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: yourusername/yourrepo:latest
-
-      # Deploy to Azure Container Instance
-      - name: Deploy to Azure Container Instance
-        run: |
-          az container create --resource-group XKSoft_ServiceDesk_Resources \
-            --name xksoftservicedesk-container \
-            --image docker.io/yourusername/yourrepo:latest \
-            --cpu 1 --memory 1.5 \
-            --registry-login-server docker.io \
-            --registry-username ${{ secrets.DOCKER_USERNAME }} \
-            --registry-password ${{ secrets.DOCKER_PASSWORD }} \
-            --dns-name-label xksoftservicedesk-unique-label \
-            --ports 80 443
