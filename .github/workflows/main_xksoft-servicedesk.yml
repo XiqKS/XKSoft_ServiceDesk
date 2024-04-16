@@ -1,4 +1,4 @@
-name: Build, Push and Deploy
+name: Build, Push and Deploy ASP.NET Core to Azure Web App
 
 on:
   push:
@@ -11,35 +11,28 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-      # Setup .NET Core
-      - name: Set up .NET Core
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.x'
+          dotnet-version: '8.x'  # Ensure this matches your project's requirement
           include-prerelease: true
 
-      # Build and Publish ASP.NET Core Project
-      - name: Build and Publish ASP.NET Core
+      - name: Build ASP.NET Core Project
         run: |
           dotnet build ./AspNetCore/XKSoft_ServiceDesk_DemoAPI/XKSoft_ServiceDesk_DemoAPI.csproj --configuration Release
+
+      - name: Publish ASP.NET Core Project
+        run: |
           dotnet publish ./AspNetCore/XKSoft_ServiceDesk_DemoAPI/XKSoft_ServiceDesk_DemoAPI.csproj -c Release -o ${{runner.temp}}/myapp
 
-      # Docker Login to Docker Hub
-      - name: Docker Login
-        uses: docker/login-action@v1
+      - name: Login to Azure
+        uses: azure/login@v1  # Consider checking for a newer version
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Build and Push Docker Image to Docker Hub
-      - name: Build and Push Docker Image
+      - name: Deploy to Azure Web App
         run: |
-          docker build -t xiqks/xksoftservicedesk:latest .
-          docker push xiqks/xksoftservicedesk:latest
-
-      # Update Container Instance via Azure Function Webhook
-      - name: Trigger Azure Function
-        run: |
-          curl -X POST "${{ secrets.WEBHOOK_URL }}"
+          az webapp deploy --name xksoft-servicedesk-api --resource-group XKSoft_ServiceDesk_Resources --src-path ${{runner.temp}}/myapp.zip --type zip
