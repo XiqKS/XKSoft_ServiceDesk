@@ -11,12 +11,13 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     });
+    // Button's event handler
     const nextButton = document.querySelector('.next-button');
     if (nextButton) {
         nextButton.addEventListener('click', chooseProcess);
     }
 });
-
+// Decides what to do based on password field being visible, ie username validated for this instance
 function chooseProcess() {
     const username = document.getElementById('username-field').value.trim();
     const password = document.getElementById('password-field').value.trim();
@@ -28,6 +29,7 @@ function chooseProcess() {
             authenticateUser(username,password);
 }
 
+// Checks validity of the username, checks against null and inputPolicy.js's 
 function validUsername(username) {
     if (username === '') {
         togglePasswordFields(false);

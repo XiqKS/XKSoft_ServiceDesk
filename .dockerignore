@@ -3,3 +3,4 @@ AspNetCore/
 .vs/
 .github/
 .gitignore
+devVars.asp

@@ -47,6 +47,7 @@ Class CookieManager
         RegenerateCSRFToken = newToken ' Return the new token
     End Function
 
+    ' Our function for generating random tokens
     function GenerateAuthString(length)
         Randomize Timer ' Initialize random number generator with current time
 

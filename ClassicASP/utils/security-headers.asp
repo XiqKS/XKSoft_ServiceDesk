@@ -1,4 +1,3 @@
-<!--#include file="devVars.asp"-->
 <%
     ' Check if the session variables are already set
     If IsEmpty(Session("APIBaseUrl")) Or IsEmpty(Session("DBConnectionString")) Then
@@ -13,10 +12,11 @@
         End If
     End If
 
+    ' Add our api url to the connect-src of our CSP
     Dim cspValue
     cspValue = "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' " & Session("APIBaseUrl") & ";"
-
     Response.AddHeader "Content-Security-Policy", cspValue
+
     Response.AddHeader "X-Content-Type-Options", "nosniff"
     Response.AddHeader "X-Frame-Options", "DENY"
     Response.AddHeader "X-XSS-Protection", "1; mode=block"
