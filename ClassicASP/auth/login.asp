@@ -22,7 +22,7 @@
         <!--#include virtual="components/dark-mode/dark-mode.asp" -->
         <img src="/icons/helldivers2.svg" class="top-left-icon" alt="Helldivers2 Icon">
         <div class="main-content">
-            <h1>XKSoft ServiceDesk</h1>
+            <h1>XKSoft ServiceDesk</h1> 
             <h2>Login</h2>
             <input type="text" class="inputEvents" id="username-field" name="username" placeholder="Username" required tabindex="1">
             <input type="password" class="inputEvents hideField" id="password-field" name="password" placeholder="Password" required tabindex="2">
