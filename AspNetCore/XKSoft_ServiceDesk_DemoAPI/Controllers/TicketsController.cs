@@ -142,5 +142,11 @@ namespace XKSoft_ServiceDesk_DemoAPI.Controllers
 
             return NoContent();
         }
+
+        // Utility method to check if a Ticket exists
+        private bool TicketExists(int id)
+        {
+            return _context.Tickets.Any(e => e.TicketId == id);
+        }
     }
 }
