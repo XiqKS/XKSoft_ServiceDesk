@@ -3,6 +3,9 @@
 ## Live Demo
 Check out the live demo of the service desk here: [XKSoft Service Desk Live](https://xksoft.westus2.azurecontainer.io/auth/login.asp)
 
+⚠️ **Please Note:** The server hosting the demo runs on a serverless SQL service, which may take a few seconds to warm up after being idle. You might experience slower initial responses during the first few requests. Once active, the response time will improve significantly. Thank you for your patience!
+
+
 ## Overview
 XKSoft Service Desk is a classic ASP-based application designed for AJAX SQL Server authentication for users. It integrates advanced security measures like CSRF tokens, authentication tokens, and parameterized queries to ensure robust, secure operations.
 
