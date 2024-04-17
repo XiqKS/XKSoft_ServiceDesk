@@ -142,23 +142,5 @@ namespace XKSoft_ServiceDesk_DemoAPI.Controllers
 
             return NoContent();
         }
-
-        [HttpGet]
-        [Route("config/settings")]
-        public IActionResult GetConfiguration()
-        {
-            var baseUrl = $"{Request.Scheme}://{Request.Host}/api/";
-            string connectionString = _configuration.GetConnectionString("ClassicDefaultConnection");
-
-            // Create a simple delimited string
-            string simpleResponse = $"{connectionString}|{baseUrl}";
-            return Ok(simpleResponse);
-        }
-
-        // Utility method to check if a Ticket exists
-        private bool TicketExists(int id)
-        {
-            return _context.Tickets.Any(e => e.TicketId == id);
-        }
     }
 }

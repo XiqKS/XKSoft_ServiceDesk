@@ -1,3 +1,4 @@
+<!--#include file="devVars.asp"-->
 <%
     ' Check if the session variables are already set
     If IsEmpty(Session("APIBaseUrl")) Or IsEmpty(Session("DBConnectionString")) Then
@@ -21,10 +22,4 @@
     Response.AddHeader "X-XSS-Protection", "1; mode=block"
     Response.AddHeader "Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload"
     Response.AddHeader "Referrer-Policy", "strict-origin-when-cross-origin"
-    
-
-    Response.Write("<!-- Debug: Connection String = " & Session("DBConnectionString") & " -->")
-    Response.Write("<!-- Debug: API String = " & Session("APIBaseUrl") & " -->")
-
-
 %>

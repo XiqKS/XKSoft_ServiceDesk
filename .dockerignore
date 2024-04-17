@@ -1,4 +1,5 @@
 AspNetCore/
 .vscode/
+.vs/
 .github/
 .gitignore

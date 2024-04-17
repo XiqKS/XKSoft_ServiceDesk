@@ -1,5 +1,6 @@
 # User-specific files
 .vs/
+.vscode/
 
 *.user
 *.userosscache
@@ -16,4 +17,4 @@ ASP_API/
 
 
 # Others
-newcert.pfx
+devVars.asp
