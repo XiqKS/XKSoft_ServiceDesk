@@ -49,4 +49,4 @@ COPY ClassicASP/ C:/inetpub/wwwroot/
 EXPOSE 80 443
 
 # Setup the container to run win-acme if needed and start IIS
-ENTRYPOINT ["powershell", "-Command", "$exists = Test-Path 'C:\\inetpub\\wwwroot\\ssl\\cert.pfx'; if (-not $exists) { .\\win-acme\\wacs.exe --target manual --host xksoft.westus2.azurecontainer.io --emailaddress cbpunchy@gmail.com --accepttos --usedefaulttaskuser --certificatestore My --installation iis,script --script 'win-acme/Scripts/ImportRDSFull.ps1' --scriptparameters '{CertThumbprint}' --installationsiteid 1}; C:\\ServiceMonitor.exe w3svc"]
+ENTRYPOINT ["powershell", "-Command", "$exists = Test-Path 'C:\\inetpub\\wwwroot\\ssl\\cert.pfx'; if (-not $exists) { .\\win-acme\\wacs.exe --target manual --host localhost --emailaddress cbpunchy@gmail.com --accepttos --usedefaulttaskuser --certificatestore My --installation iis,script --script 'win-acme/Scripts/ImportRDSFull.ps1' --scriptparameters '{CertThumbprint}' --installationsiteid 1}; C:\\ServiceMonitor.exe w3svc"]
